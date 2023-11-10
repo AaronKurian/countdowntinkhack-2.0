@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-const tinkHackBg = '/assets/images/countdown-bg.png'
+const tinkHackBg = "/assets/images/countdown-bg.png";
 
 const Home: React.FC = () => {
   const [days1, setDays1] = useState(0);
@@ -69,26 +69,24 @@ const Home: React.FC = () => {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-36 bg-black text-white">
-      <img src={tinkHackBg} className='bg-img' />
+      <img src={tinkHackBg} className="bg-img" />
       <h1 className="text-5xl font-extrabold flex-col items-center text-center mt-14 mb-16 z-10">
         tink<p className="hack">HACK</p>
       </h1>
 
       <section className="flex-col overflow-hidden h-60">
-        <div className="anime">
-          <div className="mr-12">
+        <div className="anime flex-col items-center">
+          <div className="flex-col items-center min-w-max">
             <p className="text-3xl text-center m-10">Time until Finish 🧑🏻‍💻</p>
-            <span className="text-9xl font-bold timer">
-              {days1 > 0 && `${days1}:`}
+            <span className="text-9xl font-bold timer text-white text-center">
               {formatTime(hours1)}:{formatTime(minutes1)}:{formatTime(seconds1)}
             </span>
           </div>
-          <div className="flex-col items-center">
+          <div className="flex-col justify-center items-center min-w-max">
             <p className="text-3xl text-center m-10">
               Time until First Checkpoint 🏁
             </p>
             <span className="text-9xl font-bold timer text-white text-center">
-              {days2 > 0 && `${days2}:`}
               {formatTime(hours2)}:{formatTime(minutes2)}:{formatTime(seconds2)}
             </span>
           </div>
