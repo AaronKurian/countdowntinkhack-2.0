@@ -23,16 +23,24 @@
   }
 }
 
-body {
-}
 .hack{
   font-family: 'Rich';
 }
-p{
+p {
   font-family: 'Satoshi';
 }
 .anime{
   animation: scrollup 20s ease-in-out infinite;
+}
+.bg-img {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 @keyframes scrollup{
   0%{
