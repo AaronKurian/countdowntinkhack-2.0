@@ -40,7 +40,7 @@ p{
     opacity: 1;
   }
   5%,45%{
-    transform: translateY(-0%);
+    transform: translateY(0%);
     opacity: 1;
   }
   50%,95%{
