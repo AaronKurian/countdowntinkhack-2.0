@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+@font-face {
+  font-family: 'Rich';
+  src: url('RICHIESCHICHUE-BF64dc8454a26c5.otf');
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('Satoshi-Bold.ttf');
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+}
+.hack{
+  font-family: 'Rich';
+}
+p{
+  font-family: 'Satoshi';
+}
+.anime{
+  animation: scrollup 20s ease-in-out infinite;
+}
+@keyframes scrollup{
+  0%{
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  5%,45%{
+    transform: translateY(-0%);
+    opacity: 1;
+  }
+  50%,95%{
+    transform: translateY(-60%);
+    opacity: 1;
+  }
+}
