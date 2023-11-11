@@ -9,13 +9,7 @@ const Home: React.FC = () => {
   const [minutes1, setMinutes1] = useState(0);
   const [seconds1, setSeconds1] = useState(0);
 
-  const [days2, setDays2] = useState(0);
-  const [hours2, setHours2] = useState(0);
-  const [minutes2, setMinutes2] = useState(0);
-  const [seconds2, setSeconds2] = useState(0);
-
   const deadline1 = new Date("2023-11-12T09:00:00");
-  const deadline2 = new Date("2023-11-12T00:15:00");
 
   const getTime = (
     deadline: Date,
@@ -39,15 +33,8 @@ const Home: React.FC = () => {
       1000
     );
 
-    getTime(deadline2, setDays2, setHours2, setMinutes2, setSeconds2);
-    const interval2 = setInterval(
-      () => getTime(deadline2, setDays2, setHours2, setMinutes2, setSeconds2),
-      1000
-    );
-
     return () => {
       clearInterval(interval1);
-      clearInterval(interval2);
     };
   }, []);
 
@@ -74,23 +61,11 @@ const Home: React.FC = () => {
         tink<p className="hack">HACK</p>
       </h1>
 
-      <section className="flex-col overflow-hidden h-60">
-        <div className="anime flex-col items-center">
-          <div className="flex-col items-center min-w-max">
-            <p className="text-3xl text-center m-10">Time until Finish 🧑🏻‍💻</p>
-            <span className="text-9xl font-bold timer text-white text-center">
-              {formatTime(hours1)}:{formatTime(minutes1)}:{formatTime(seconds1)}
-            </span>
-          </div>
-          <div className="flex-col justify-center items-center min-w-max">
-            <p className="text-3xl text-center m-10">
-              Time until First Checkpoint 🏁
-            </p>
-            <span className="text-9xl font-bold timer text-white text-center">
-              {formatTime(hours2)}:{formatTime(minutes2)}:{formatTime(seconds2)}
-            </span>
-          </div>
-        </div>
+      <section className="flex-col z-50">
+        <p className="text-3xl text-center m-10">Time until Finish 🧑🏻‍💻</p>
+        <span className="text-9xl font-bold timer text-white text-center ">
+          {formatTime(hours1)}:{formatTime(minutes1)}:{formatTime(seconds1)}
+        </span>
       </section>
     </main>
   );
