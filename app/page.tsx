@@ -15,7 +15,7 @@ const Home: React.FC = () => {
   const [seconds2, setSeconds2] = useState(0);
 
   const deadline1 = new Date("2023-11-12T09:00:00");
-  const deadline2 = new Date("2023-11-11T22:00:00");
+  const deadline2 = new Date("2023-11-11T23:30:00");
 
   const getTime = (
     deadline: Date,
