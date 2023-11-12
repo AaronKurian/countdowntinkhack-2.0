@@ -61,12 +61,18 @@ const Home: React.FC = () => {
         tink<p className="hack">HACK</p>
       </h1>
 
-      <section className="flex-col z-50">
-        <p className="text-3xl text-center m-10">Time until Finish 🧑🏻‍💻</p>
-        <span className="text-9xl font-bold timer text-white text-center ">
-          {formatTime(hours1)}:{formatTime(minutes1)}:{formatTime(seconds1)}
-        </span>
-      </section>
+      {seconds1 == 0 && minutes1 == 0 && hours1 == 0 && days1 == 0 ? (
+        <section className="flex-col z-50">
+          <p className="text-3xl text-center m-10">Time until Finish 🧑🏻‍💻</p>
+          <span className="text-9xl font-bold timer text-white text-center ">
+            {formatTime(hours1)}:{formatTime(minutes1)}:{formatTime(seconds1)}
+          </span>
+        </section>
+      ) : (
+        <section className="flex-col z-50 pt-20">
+          <p className="text-4xl text-center m-10">Hackathon has concluded🥲</p>
+        </section>
+      )}
     </main>
   );
 };
