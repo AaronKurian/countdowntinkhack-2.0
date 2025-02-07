@@ -5,8 +5,8 @@ import Image from "next/image";
 const img  = "/assets/images/2.0.png";
 const i = "/assets/images/original_i_kuthu.png";
 const tinkHackBg = "/assets/images/background.svg";
-const BubbleImage = "/assets/images/Bubble.svg";
-const LandingPageImage3 = "/assets/images/landing_page_3.svg";
+// const BubbleImage = "/assets/images/Bubble.svg";
+// const LandingPageImage3 = "/assets/images/landing_page_3.svg";
 
 const motivationalQuotes = [
   
@@ -99,6 +99,9 @@ const Home: React.FC = () => {
     setIsRunning(false);
     setIsPaused(false);
     setTime(10);
+    setTime(24 * 60 * 60);
+//     setTime(10);
+
   };
 
   return (
