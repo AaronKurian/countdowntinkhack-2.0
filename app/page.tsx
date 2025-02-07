@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+// import { Cursor } from "react-text-cursor";
 
 const img  = "/assets/images/2.0.png";
 const i = "/assets/images/original_i_kuthu.png";
@@ -10,16 +11,16 @@ const tinkHackBg = "/assets/images/background.svg";
 
 const motivationalQuotes = [
   
- "Hackathons aren’t about coding, they’re about creating the future.",
+ "Hackathons aren't about coding, they're about creating the future.",
  "Every great innovation starts with a crazy idea and a sleepless night.",
  "Think. Code. Innovate. Repeat.",
  "The only way to do great work is to love what you do. – Steve Jobs",  
- "It’s not about how many times you fail, it’s about how many times you iterate.",
+ "It's not about how many times you fail, it's about how many times you iterate.",
  "Dream big, build fast, break things, and fix them even faster.",
  "Alone we can do so little, together we can do so much. – Helen Keller",  
- "A hackathon isn’t about being the best coder, it’s about solving real problems.",
+ "A hackathon isn't about being the best coder, it's about solving real problems.",
  "Great things happen when passionate minds come together.",
- "Code like there’s no tomorrow. Because the deadline is real!",
+ "Code like there's no tomorrow. Because the deadline is real!",
  "Sleep is optional. Innovation is not.",
  "Success is built in the hours when others are resting.",
   // "You can do it! 💪",
@@ -33,7 +34,7 @@ const motivationalQuotes = [
 ];
 
 const Home: React.FC = () => {
-  const [time, setTime] = useState(5);
+  const [time, setTime] = useState(24 * 60 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [currentQuote, setCurrentQuote] = useState(0);
@@ -98,7 +99,7 @@ const Home: React.FC = () => {
   const handleStop = () => {
     setIsRunning(false);
     setIsPaused(false);
-    setTime(10);
+    // setTime(10);
     setTime(24 * 60 * 60);
 //     setTime(10);
 
@@ -189,10 +190,12 @@ const Home: React.FC = () => {
       </h1> */}
 
       <section className="flex-col z-50">
-        {isRunning && !isPaused && time > 0 && (
-          <div className=" text-lg sm:text-2xl font-bold text-center mb-8 text-gray-400 transition-opacity duration-500 ease-in-out">
+        {isRunning && !isPaused && time > 0 ? (
+          <div className="text-2xl font-bold text-center mb-2 text-gray-400 transition-opacity duration-500 ease-in-out min-h-[4rem]">
             {motivationalQuotes[currentQuote]}
           </div>
+        ) : (
+          <div className="mb-2 min-h-[4rem]"></div>
         )}
 
         <span className="text-7xl sm:text-9xl font-bold timer text-white text-center block mb-10">
