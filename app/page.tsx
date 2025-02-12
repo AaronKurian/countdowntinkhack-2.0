@@ -135,24 +135,20 @@ const Home: React.FC = () => {
                 rounded-3xl"
               />
             </span>
-            nk
-          </div>
-
-          {/* 2.0 Image */}
-          <div className="absolute filter -blur-[8px] 
-            top-[4.7rem] left-[1.6rem] w-[2rem] h-[2.4rem] 
-            sm:top-[4.7rem] sm:left-[11.2rem] sm:w-[2.8rem] sm:h-[3rem] 
-            md:-top-[3.8rem] md:left-[21.2rem] md:w-[4rem] md:h-[4rem] 
-            lg:w-[4.5rem] lg:h-[4.6rem] lg:-top-[3.5rem] lg:left-[29.5rem]"
-          >
-            <Image 
-              src={img} 
-              alt="2.0 Image" 
-              width={90}
-              height={97}
-              className="w-full h-full brightness-150" 
-              priority
-            />
+            n
+            {/* 2.0 Image - Positioned above 'n' */}
+            <div className="absolute filter -blur-[8px] -top-4 right-5 max-lg:right-2 max-lg:-top-6 max-md:-right-2 max-md:-top-7"
+            >
+              <Image 
+                src={img} 
+                alt="2.0 Image" 
+                width={90}
+                height={97}
+                className="w-full h-full brightness-150 scale-75 max-md:scale-50" 
+                priority
+              />
+            </div>
+            k
           </div>
 
           {/* HACK */}
