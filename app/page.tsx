@@ -106,7 +106,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-36 bg-black text-white w-screen">
+    <main className="flex min-h-screen flex-col items-center p-36 bg-black text-white w-screen font-satoshi">
       <img src={tinkHackBg} className="bg-img" alt="Countdown background" />
 
       <div className="z-10 flex items-center justify-center h-1/4 w-screen ">
@@ -137,7 +137,9 @@ const Home: React.FC = () => {
             </span>
             n
             {/* 2.0 Image - Positioned above 'n' */}
-            <div className="absolute filter -blur-[8px] -top-4 right-5 max-lg:right-2 max-lg:-top-6 max-md:-right-2 max-md:-top-7"
+            <div className="absolute filter -blur-[8px] -top-4 right-5 
+            max-lg:right-2 max-lg:-top-6 
+            max-md:-right-2 max-md:-top-7"
             >
               <Image 
                 src={img} 
