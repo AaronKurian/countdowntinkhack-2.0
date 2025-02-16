@@ -27,6 +27,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={khuja.variable}>
+      <head>
+      <link rel="icon" href="/TinkHackLogo.png" type="image/png" />
+      </head>
       <body className={spaceGrotesk.className}>{children}</body>
     </html>
   );
