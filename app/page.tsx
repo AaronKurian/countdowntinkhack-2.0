@@ -137,16 +137,16 @@ const Home: React.FC = () => {
             </span>
             n
             {/* 2.0 Image - Positioned above 'n' */}
-            <div className="absolute filter -blur-[8px] -top-4 right-5 
-            max-lg:right-2 max-lg:-top-6 
-            max-md:-right-2 max-md:-top-7"
-            >
-              <Image 
-                src={img} 
-                alt="2.0 Image" 
-                width={90}
-                height={97}
-                className="w-full h-full brightness-150 scale-75 max-md:scale-50" 
+            <div className="absolute filter -blur-[8px] -top-4 right-5
+              max-lg:right-2 max-lg:-top-6
+              max-md:right-4 max-md:-top-1
+              max-sm:-top-1 max-sm:right-3">
+              <Image
+                src={img}
+                alt="2.0 Image"
+                width={96}
+                height={96}
+                className="w-24 h-24 brightness-150 max-md:w-12 max-md:h-12 max-sm:w-9 max-sm:h-9"
                 priority
               />
             </div>
