@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import VideoPlayer from "./VideoPlayer";
 // import { Cursor } from "react-text-cursor";
 
 const img  = "/assets/images/2.0.png";
@@ -33,63 +34,106 @@ const motivationalQuotes = [
   // "Think. Code. Innovate. 🎯",
 ];
 
+const formatNumber = (num: number): string => {
+  return num < 10 ? `0${num}` : `${num}`;
+};
+
 const Home: React.FC = () => {
-  const [time, setTime] = useState(24 * 60 * 60);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [currentQuote, setCurrentQuote] = useState(0);
+  // Initialize all states with client-side check
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [showVideo, setShowVideo] = useState(false);
+  const [lastVideoTime, setLastVideoTime] = useState(Date.now());
+  const [isPaused, setIsPaused] = useState(true);
+  const [isStarted, setIsStarted] = useState(false);
+  const [currentQuote, setCurrentQuote] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
+  // Add this effect to handle client-side initialization
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isRunning && !isPaused && time > 0) {
-      interval = setInterval(() => {
-        setTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [isRunning, isPaused, time]);
-
-  // Quote rotation effect
-  useEffect(() => {
-    let quoteInterval: NodeJS.Timeout;
-
-    if (isRunning && !isPaused && time > 0) {
-      // Initial quote change to ensure we start rotating immediately
-      setCurrentQuote((prev) => (prev + 1) % motivationalQuotes.length);
+    setIsClient(true);
+    
+    // Load saved states from localStorage
+    if (typeof window !== 'undefined') {
+      const savedTimer = localStorage.getItem('timerState');
+      const savedIsStarted = localStorage.getItem('isStarted') === 'true';
+      const savedIsPaused = localStorage.getItem('isPaused') === 'true';
       
-      quoteInterval = setInterval(() => {
-        setCurrentQuote((prev) => {
-          const nextQuote = (prev + 1) % motivationalQuotes.length;
-          return nextQuote;
-        });
-      }, 3000); // This is already 3000ms (3 seconds), but let's make sure it's working
+      if (savedTimer && savedIsStarted) {
+        setTimeLeft(JSON.parse(savedTimer));
+        setIsStarted(savedIsStarted);
+        setIsPaused(savedIsPaused);
+      }
+    }
+  }, []);
+
+  // Timer effect
+  useEffect(() => {
+    const targetDate = new Date('2025-03-23T10:00:00Z');
+    
+    let timer: NodeJS.Timeout;
+    if (!isPaused && isStarted) {
+      const updateTimer = () => {
+        const now = new Date();
+        const difference = targetDate.getTime() - now.getTime();
+        
+        if (difference < 0) {
+          clearInterval(timer);
+          const resetState = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+          setTimeLeft(resetState);
+          setIsStarted(false);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('timerState', JSON.stringify(resetState));
+            localStorage.setItem('isStarted', 'false');
+          }
+          return;
+        }
+
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        const newTimeLeft = { days, hours, minutes, seconds };
+        setTimeLeft(newTimeLeft);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('timerState', JSON.stringify(newTimeLeft));
+        }
+      };
+
+      // Initial update
+      updateTimer();
+      // Set up interval
+      timer = setInterval(updateTimer, 1000);
     }
 
-    return () => {
-      if (quoteInterval) {
-        clearInterval(quoteInterval);
-      }
-    };
-  }, [isRunning, isPaused]); // Remove 'time' from the dependency array to prevent re-renders on every second
+    return () => clearInterval(timer);
+  }, [isPaused, isStarted]);
 
-  const formatTime = (timeInSeconds: number) => {
-    const hours = Math.floor(timeInSeconds / 3600);
-    const minutes = Math.floor((timeInSeconds % 3600) / 60);
-    const seconds = timeInSeconds % 60;
+  useEffect(() => {
+    // Initial quote
+    const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+    setCurrentQuote(motivationalQuotes[randomIndex]);
 
-    const format = (value: number) => (value < 10 ? `0${value}` : value);
-    return `${format(hours)}:${format(minutes)}:${format(seconds)}`;
-  };
+    // Quote rotation
+    const quoteTimer = setInterval(() => {
+      const newIndex = Math.floor(Math.random() * motivationalQuotes.length);
+      setCurrentQuote(motivationalQuotes[newIndex]);
+    }, 5000);
+
+    return () => clearInterval(quoteTimer);
+  }, []);
 
   const handleStart = () => {
-    setIsRunning(true);
+    setIsStarted(true);
     setIsPaused(false);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isStarted', 'true');
+      localStorage.setItem('isPaused', 'false');
+    }
+  };
+
+  const handleCloseVideo = () => {
+    setShowVideo(false);
   };
 
   const handlePauseResume = () => {
@@ -97,27 +141,31 @@ const Home: React.FC = () => {
   };
 
   const handleStop = () => {
-    setIsRunning(false);
-    setIsPaused(false);
-    // setTime(10);
-    setTime(24 * 60 * 60);
-//     setTime(10);
-
+    setIsPaused(true);
+    setIsStarted(false);
+    const resetState = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    setTimeLeft(resetState);
+    // Clear localStorage only on client side
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('timerState');
+      localStorage.removeItem('isPaused');
+      localStorage.removeItem('isStarted');
+    }
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-36 bg-black text-white w-screen font-satoshi">
-      <img src={tinkHackBg} className="bg-img" alt="Countdown background" />
+    <main className="flex min-h-screen flex-col items-center justify-center p-36 bg-black text-white w-screen font-satoshi relative">
+      <img src={tinkHackBg} className="bg-img absolute inset-0 w-full h-full object-cover" alt="Countdown background" />
 
-      <div className="z-10 flex items-center justify-center h-1/4 w-screen ">
-        <div className="flex flex-col items-center justify-center gap-0 w-screen relative  ">
+      <div className="z-10 flex flex-col items-center justify-center w-full max-w-4xl">
+        {/* Title Section */}
+        <div className="flex flex-col items-center justify-center mb-16">
           {/* Tink */}
-          <div className="filter blur-[0.5px] font-productsansbold font-bold text-center -px-8
+          <div className="filter blur-[0.5px] font-productsansbold font-bold text-center relative
             text-[2.2rem] mt-20 
             sm:text-[3rem] sm:mt-20 
             md:text-[4rem] md:-mt-20 
-            lg:text-[5rem] lg:-mt-14 
-            relative"
+            lg:text-[5rem] lg:-mt-14"
           >
             T
             <span className="relative inline-block">
@@ -178,60 +226,67 @@ const Home: React.FC = () => {
               </span>
             </h1>
           </div>
-
-         
         </div>
-      </div>
 
-      {/* <h1 className="text-5xl font-extrabold flex-col items-center text-center mt-14 mb-16 z-10">
-        tink<p className="hack">HACK</p>
-      </h1> */}
+        {/* Timer Section */}
+        {isClient && (
+          <div className="flex flex-col items-center justify-center w-full">
+            {/* Quote Section - Fixed Height */}
+            <div className="flex items-center justify-center mb-6 -mt-16">
+              {currentQuote && (
+                <p className="text-xl font-medium text-gray-300 italic text-center px-4">
+                  "{currentQuote}"
+                </p>
+              )}
+            </div>
 
-      <section className="flex-col z-50">
-        {isRunning && !isPaused && time > 0 ? (
-          <div className="text-2xl font-bold text-center mb-2 text-gray-400 transition-opacity duration-500 ease-in-out min-h-[4rem]">
-            {motivationalQuotes[currentQuote]}
+            {/* Timer Display - Fixed Height */}
+            <div className="flex flex-col items-center justify-center h-40">
+              <div className="flex items-center text-9xl font-bold">
+                <span>{formatNumber(timeLeft.days)}</span>
+                <span className="mx-4">:</span>
+                <span>{formatNumber(timeLeft.hours)}</span>
+                <span className="mx-4">:</span>
+                <span>{formatNumber(timeLeft.minutes)}</span>
+                <span className="mx-4">:</span>
+                <span>{formatNumber(timeLeft.seconds)}</span>
+              </div>
+            </div>
+
+            {/* Buttons Section - Fixed Height */}
+            <div className="h-20 flex items-center justify-center mt-8">
+              {!isStarted ? (
+                <button
+                  onClick={handleStart}
+                className={` px-6 py-2 text-transparent bg-clip-text bg-gradient-to-r from-[#E283BD] to-[#E2CF6C] bg-[#1E1E1E] rounded-[30px] border-[1px] border-[#E283BD] hover:border-[#E2CF6C] hover:shadow-lg transition-all hover:scale-105`}
+                >
+                  Start
+                </button>
+              ) : (
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handlePauseResume}
+                  className={`px-6 py-2 text-transparent bg-clip-text bg-gradient-to-r from-[#E283BD] to-[#E2CF6C] bg-[#1E1E1E] rounded-[30px] border-[1px] border-[#E283BD] hover:border-[#E2CF6C] hover:shadow-lg transition-all hover:scale-105`}
+                  >
+                    {isPaused ? 'Resume' : 'Pause'}
+                  </button>
+                  <button
+                    onClick={handleStop}
+                  className={`px-6 py-2 text-transparent bg-clip-text bg-gradient-to-r from-[#E283BD] to-[#E2CF6C] bg-[#1E1E1E] rounded-[30px] border-[1px] border-[#E283BD] hover:border-[#E2CF6C] hover:shadow-lg transition-all hover:scale-105`}
+                  >
+                    Stop
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        ) : (
-          <div className="mb-2 min-h-[4rem]"></div>
         )}
 
-        <span className="text-7xl sm:text-9xl font-bold timer text-white text-center block mb-10">
-          {formatTime(time)}
-        </span>
-
-        <div className="flex gap-6 pt-12 justify-center">
-          {!isRunning ? (
-            <button
-              onClick={handleStart}
-              className=" px-6 py-2 text-transparent bg-clip-text bg-gradient-to-r from-[#E283BD] to-[#E2CF6C] bg-[#1E1E1E] rounded-[30px] border-[1px] border-[#E283BD] hover:border-[#E2CF6C] hover:shadow-lg transition-all hover:scale-105"
-            >
-              Start
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={handlePauseResume}
-                className=" px-6 py-2 text-transparent bg-clip-text bg-gradient-to-r from-[#E283BD] to-[#E2CF6C] bg-[#1E1E1E] rounded-[30px] border-[1px] border-[#E283BD] hover:border-yellow-600 hover:shadow-lg transition-all hover:scale-105"
-                >
-                {isPaused ? "Resume" : "Pause"}
-              </button>
-              <button
-                onClick={handleStop}
-                className=" px-6 py-2 text-transparent bg-clip-text bg-gradient-to-r from-[#E283BD] to-[#E2CF6C] bg-[#1E1E1E] rounded-[30px] border-[1px] border-[#E283BD] hover:border-pink-600 hover:shadow-lg transition-all hover:scale-105"
-                >
-                Stop
-              </button>
-            </>
-          )}
-        </div>
-
-        {time === 0 && (
-          <p className="text-4xl text-center mt-8">Hackathon has ended! 🎉</p>
-        )}
-
-        
-      </section>
+        <VideoPlayer 
+          isOpen={showVideo} 
+          onClose={handleCloseVideo}
+        />
+      </div>
     </main>
   );
 };
